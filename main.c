@@ -8,7 +8,11 @@
 bool lflag = false; //Opción -l, contar lineas
 bool mflag = false; //Opción -m, contar caracteres
 bool wflag = false; // opcion -w, contar palabras
+int files_n = 0;
 
+int total_lines = 0;
+int total_words = 0;
+int total_characters = 0;
 
 int main(int argc, char **argv){
 	int opt, index;
@@ -19,15 +23,12 @@ int main(int argc, char **argv){
 		switch(opt)
 		{
 			case 'l':
-				printf("contar lineas\n");
 				lflag = true;
 				break;
 			case 'w':
-				printf("contar palabras\n");
 				wflag = true;
 				break;
 			case 'm':
-				printf("contar caracteres\n");
 				mflag = true;
 				break;
 			case 'h':
@@ -35,7 +36,7 @@ int main(int argc, char **argv){
 				return 0;
 			case '?':
 			default:
-				fprintf(stderr, "uso: %s [-i] [-e] [arg 1] [arg 2] ... [arg n]\n", argv[0]);
+				fprintf(stderr, "uso:\n %s [-l] [-w] [-m] [-h] [arg 1] [arg 2] ... [arg n]\n", argv[0]);
 				fprintf(stderr, "     %s -h\n", argv[0]);
 				return -1;
 		}
@@ -43,34 +44,53 @@ int main(int argc, char **argv){
 
 	/* Aquí imprime argumentos que no son opción */
 	for (index = optind; index < argc; index++) {
-		printf("Abriendo %s...\n", argv[index]);
 		fptr = fopen(argv[index], "r");
-
+		
 		if(fptr == NULL) {
 			fprintf(stderr, "Error al intentar abrir %s\n", argv[index]);
 			return 1;
 		}
+		
 		else{
+			files_n++;
 			if (lflag){
 				int lines = contar_lineas(fptr);
-				printf("%i ", lines);	
+				printf("%i ", lines);
+				total_lines += lines;	
 				
 			}
 			if (wflag){
 				rewind(fptr);
 				int words = contar_palabras(fptr);
 				printf("%i ", words);	
+				total_words += words;
 			}
-			if (wflag){
+			if (mflag){
 				rewind(fptr);
 				int characters = contar_caracteres(fptr);
 				printf("%i ", characters);	
+				total_characters += characters;
 			}
 			printf("%s\n", argv[index]);
-				
+			fclose(fptr);
 		}
+	}
+
+	if (files_n>1) {
+		if (total_lines>0){
+			printf("%i ", total_lines);	
+		}
+		if (total_words>0){
+			printf("%i ", total_words);	
+		}
+		if (total_characters>0){
+			printf("%i ", total_characters);	
+		}
+		printf("total\n");
 	}
 
 	if(argc == 1)
 		print_help(argv[0]);
 	}
+
+

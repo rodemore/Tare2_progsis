@@ -1,6 +1,5 @@
 [![Run on Repl.it](https://repl.it/badge/github/progsis-espol/progsis-c-plantilla)](https://repl.it/github/progsis-espol/progsis-c-plantilla)
-# Plantilla genérica repositorio C
-Plantilla genérica para repositorios de proyectos desarrollados en el lenguaje C usando GCC y Make en LINUX.
+# Implementanción de wc en c
 
 ## Descripción
 Este programa contiene código ejemplo de uso de lo siguiente:
@@ -8,74 +7,56 @@ Este programa contiene código ejemplo de uso de lo siguiente:
 * Uso de un *Makefile* para compilar varios archivos
 * Uso de *.gitignore*
 * Parsing de opciones y argumentos usando *getopt*
-* Ingreso de texto desde consola usando *getline()*
+* Uso de *fscan*
 
 ## Uso del programa
 El programa tiene el siguiente funcionamiento:
 ```
-$ ./programa -h
-Programa en C ejemplo, imprime argumentos ingresados en consola.
-uso:
- ./programa [-i] [-e] [arg 1] [arg 2] ... [arg n]
- ./programa -h
+$ ./wc -h
+ ./wc [-i] [-e] [arg 1] [arg 2] ... [arg n]
+ ./wc -h
 Opciones:
  -h			Ayuda, muestra este mensaje
- -e			Switch to english
- -i			Ingresa una línea de texto
+ -l			Muestra conteo de líneas
+ -w			Muestra conteo de palabras
+ -m			Muestra conteo de caracteres
+
 ```
 
-Ejemplo de ejecución:
+Ejemplos de ejecución:
+Ejemplo usando todos el parámetro -w para contar palabras
 ```
-$ ./programa -i hola mundo
-Argumento no-opción: hola
-Argumento no-opción: mundo
-Ingrese texto: que hay!
-que hay!
+$ ./wc -w hola.txt
+6 hola.txt
 ```
-Otro ejemplo de ejecución, usando -e:
+Otro ejemplo de ejecución, usando -l para contar las líneas:
 ```
-./programa -ie hola mundo
-Non-option argument: hola
-Non-option argument: mundo
-Input text: hola todos!
-hola todos!
+./wc -l hola.txt
+6 hola.txt
+
+```
+Otro ejemplo de ejecución, usando el parámetro l,m, w  para más de un archivo:
+```
+./wc -lmw hola.txt foo.txt
+2 6 43 hola.txt
+4 15 72 foo.txt
+6 21 115 total
+
 ```
 
 ## Ejemplos de código en el programa
 El archivo [input.h](input.h) muestra un ejemplo de documentación de una función:
-```C
-/**
- * Función get_from_console muestra una forma segura de ingresar una linea de texto desde consola.
- * IMPORTANTE: line debe ser liberado con free() después de su uso.
- *
- * @param line Cadena de carecteres a ser llenada por getline. Este parametro será llenado con
- *             toda la línea de texto ingresada sin incluir el salto de línea '\n'.
- *
- * @return Número de caracteres en la línea de texto, no considera '\n'. -1 si hubo error.
- */
-int get_from_console(char **line);
 ```
-En el archivo [input.c](input.c) se muestra el uso de *getline()* para ingresar texto desde consola:
-```C
-int get_from_console(char **line)
-{
-	*line = NULL; //Importante inicializar en NULL
-	size_t n = 0; //Obliga a getline a usar malloc()
-	ssize_t l = 0; //Número de caracteres ingresados, incluye '\n'
-
-	if(eflag)
-		printf("Input text: ");
-	else
-		printf("Ingrese texto: ");
-
-	l = getline(line, &n, stdin); //getline llama a malloc internamente
-
-	if(l > 0)
-		(*line)[l-1] = '\0'; //Sobreescribe el salto de línea
-	else
-		return l;
-
-	return l-1;
+int contar_palabras(FILE *archivo){
+	int nw = -1;
+	char texto[MAXWORD];
+	while (fscanf(archivo, "%s", texto)==1){
+		nw +=1;
+	}
+	if (nw == -1){
+		return nw;
+	}
+	return nw+=1;
 }
 ```
 ## Compilación
