@@ -8,7 +8,7 @@ int get_from_console(char **line)
 {
 	*line = NULL; //Importante inicializar en NULL
 	size_t n = 0; //Obliga a getline a usar malloc()
-	ssize_t l = 0; //Número de caracteres ingresados, incluye '\n'
+	size_t l = 0; //Número de caracteres ingresados, incluye '\n'
 
 	if(eflag)
 		printf("Input text: ");

@@ -1,29 +1,30 @@
-DEPS = input.h
+DEPS = funciones.h
 
-programa: main.o input.o
-	gcc -o programa main.o input.o $(DFLAGS)
+wc: main.o funciones.o
+	gcc -o wc main.o  funciones.o $(DFLAGS)
 
-main.o: main.c $(DEPS)
+main.o: main.c  $(DEPS)
 	gcc -c main.c $(DFLAGS)
 
-input.o: input.c $(DEPS)
-	gcc -c input.c $(DFLAGS)
+funciones.o: funciones.c $(DEPS)
+	gcc -c funciones.c $(DFLAGS)
+
 
 # Compila usando la opción -g para facilitar la depuración con gdb.
 .PHONY: debug
 debug: DFLAGS = -g
-debug: clean programa
+debug: clean wc
 
 # Compila habilitando la herramienta AddressSanitizer para
 # facilitar la depuración en tiempo de ejecución.
 .PHONY: sanitize
 sanitize: DFLAGS = -fsanitize=address,undefined
-sanitize: clean programa
+sanitize: clean wc
 
 .PHONY: clean
 clean:
-	rm -rf programa *.o
+	rm -rf wc *.o
 
 .PHONY: run
-run: programa
-	./programa hola mundo
+run: wc
+	./wc hola mundo

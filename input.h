@@ -12,4 +12,5 @@
  */
 int get_from_console(char **line);
 
+
 #endif /* INPUT_H */

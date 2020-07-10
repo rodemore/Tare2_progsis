@@ -3,36 +3,32 @@
 #include <stdlib.h>
 #include <getopt.h>
 
-#include "input.h"
+#include "funciones.h"
 
-bool eflag = false; //Opción -e, switch to english
-bool iflag = false; //Opción -i, ingresa una línea de texto
+bool lflag = false; //Opción -l, contar lineas
+bool mflag = false; //Opción -m, contar caracteres
+bool wflag = false; // opcion -w, contar palabras
 
-void print_help(char *command)
-{
-	printf("Programa en C ejemplo, imprime argumentos ingresados en consola.\n");
-	printf("uso:\n %s [-i] [-e] [arg 1] [arg 2] ... [arg n]\n", command);
-	printf(" %s -h\n", command);
-	printf("Opciones:\n");
-	printf(" -h\t\t\tAyuda, muestra este mensaje\n");
-	printf(" -e\t\t\tSwitch to english\n");
-	printf(" -i\t\t\tIngresa una línea de texto\n");
-}
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv){
 	int opt, index;
-
+	FILE *fptr;
 	/* Este lazo recorre los argumentos buscando las
 	opciones -e y -h... */
-	while ((opt = getopt (argc, argv, "ieh")) != -1){
+	while ((opt = getopt (argc, argv, "hlwm")) != -1){
 		switch(opt)
 		{
-			case 'i':
-				iflag = true;
+			case 'l':
+				printf("contar lineas\n");
+				lflag = true;
 				break;
-			case 'e':
-				eflag = true;
+			case 'w':
+				printf("contar palabras\n");
+				wflag = true;
+				break;
+			case 'm':
+				printf("contar caracteres\n");
+				mflag = true;
 				break;
 			case 'h':
 				print_help(argv[0]);
@@ -47,21 +43,34 @@ int main(int argc, char **argv)
 
 	/* Aquí imprime argumentos que no son opción */
 	for (index = optind; index < argc; index++) {
-		if(eflag)
-			printf ("Non-option argument: %s\n", argv[index]);
-		else
-			printf ("Argumento no-opción: %s\n", argv[index]);
+		printf("Abriendo %s...\n", argv[index]);
+		fptr = fopen(argv[index], "r");
+
+		if(fptr == NULL) {
+			fprintf(stderr, "Error al intentar abrir %s\n", argv[index]);
+			return 1;
+		}
+		else{
+			if (lflag){
+				int lines = contar_lineas(fptr);
+				printf("%i ", lines);	
+				
+			}
+			if (wflag){
+				rewind(fptr);
+				int words = contar_palabras(fptr);
+				printf("%i ", words);	
+			}
+			if (wflag){
+				rewind(fptr);
+				int characters = contar_caracteres(fptr);
+				printf("%i ", characters);	
+			}
+			printf("%s\n", argv[index]);
+				
+		}
 	}
 
-	/* Aquí ingresa una línea de texto desde consola y la reimprime en consola */
-	if(iflag) {
-		char *texto;
-		get_from_console(&texto);
-		printf("%s\n", texto);
-		free(texto);
-	}
-
-	/* El programa se invocó sin usar opciones o argurmentos */
 	if(argc == 1)
 		print_help(argv[0]);
-}
+	}
