@@ -45,7 +45,7 @@ Otro ejemplo de ejecución, usando el parámetro l,m, w  para más de un archivo
 ```
 
 ## Ejemplos de código en el programa
-El archivo [input.h](input.h) muestra un ejemplo de documentación de una función:
+Uso de la función fscanf para leer las palabras de un archivo
 ```
 int contar_palabras(FILE *archivo){
 	int nw = -1;
