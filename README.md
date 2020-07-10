@@ -32,7 +32,7 @@ $ ./wc -w hola.txt
 Otro ejemplo de ejecución, usando -l para contar las líneas:
 ```
 ./wc -l hola.txt
-6 hola.txt
+2 hola.txt
 
 ```
 Otro ejemplo de ejecución, usando el parámetro l,m, w  para más de un archivo:
